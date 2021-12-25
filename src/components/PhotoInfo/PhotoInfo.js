@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './PhotoInfo.module.css';
 import PropTypes from 'prop-types';
 
@@ -12,98 +12,94 @@ import NotFound from 'components/NotFound';
 import scroll from 'react-scroll';
 const scrollToBottom = scroll.animateScroll.scrollToBottom;
 
-export class PhotoInfo extends Component {
-  state = {
-    photos: [],
-    page: 1,
-    status: 'idle',
-    error: null,
+export default function PhotoInfo({ value }) {
+  const [photos, setPhotos] = useState([]);
+  const [page, setPage] = useState(1);
+  const [status, setStatus] = useState('idle');
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (value === '') {
+      return;
+    }
+    setStatus('pending');
+    updateState();
+    requestPhotos(value, page);
+    scrollToBottom();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  useEffect(() => {
+    if (page === 1) {
+      return;
+    }
+    setStatus('pending');
+
+    requestPhotos(value, page);
+    scrollToBottom();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  const requestPhotos = (searchQuery, page) => {
+    photosAPI
+      .fetchPhotos(searchQuery, page)
+      .then(fetchPhotos => {
+        if (fetchPhotos.hits.length === 0) {
+          return Promise.reject(new Error(`${searchQuery} nothing to display`));
+        }
+        setPhotos(prevPhotos => [...prevPhotos, ...fetchPhotos.hits]);
+        setStatus('resolved');
+      })
+      .catch(error => {
+        setError(error);
+        setStatus('rejected');
+      });
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const prevValue = prevProps.value;
-    const nextValue = this.props.value;
-    const nextPage = this.state.page;
+  const updateState = () => {
+    setPhotos([]);
+    setPage(1);
+  };
 
-    if (prevValue !== nextValue) {
-      this.setState({ status: 'pending' });
+  const handleButtonClick = () => {
+    setPage(prevPage => prevPage + 1);
+  };
 
-      this.updateState();
-      this.requestPhotos(nextValue, nextPage);
-      scrollToBottom();
-    }
-
-    if (prevState.page !== nextPage) {
-      this.requestPhotos(nextValue, nextPage);
-      scrollToBottom();
-    }
+  if (status === 'idle') {
+    return (
+      <div className={styles.Container}>
+        <Background />
+      </div>
+    );
   }
 
-  requestPhotos = (value, page) => {
-    photosAPI
-      .fetchPhotos(value, page)
-      .then(photos => {
-        if (photos.hits.length === 0) {
-          return Promise.reject(new Error(`${value} nothing to display`));
-        }
-        this.setState(prevState => ({
-          photos: [...prevState.photos, ...photos.hits],
-          status: 'resolved',
-        }));
-      })
-      .catch(error => this.setState({ error, status: 'rejected' }));
-  };
+  if (status === 'pending') {
+    return (
+      <div className={styles.Container}>
+        <Loader />;
+      </div>
+    );
+  }
+  if (status === 'rejected') {
+    return (
+      <div className={styles.Container}>
+        <NotFound error={error.message} />
+      </div>
+    );
+  }
 
-  updateState = () => {
-    this.setState({ photos: [], page: 1 });
-  };
-
-  handleButtonClick = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-  };
-
-  render() {
-    const { photos, status, error } = this.state;
-
-    if (status === 'idle') {
-      return (
+  if (status === 'resolved') {
+    return (
+      <>
+        <ImageGallery photos={photos} />
         <div className={styles.Container}>
-          <Background />
+          {photos.length > 0 && <Button onClick={handleButtonClick} />}
         </div>
-      );
-    }
-
-    if (status === 'pending') {
-      return (
-        <div className={styles.Container}>
-          <Loader />;
-        </div>
-      );
-    }
-    if (status === 'rejected') {
-      return (
-        <div className={styles.Container}>
-          <NotFound error={error.message} />
-        </div>
-      );
-    }
-
-    if (status === 'resolved') {
-      return (
-        <>
-          <ImageGallery photos={photos} />
-          <div className={styles.Container}>
-            {photos.length > 0 && <Button onClick={this.handleButtonClick} />}
-          </div>
-        </>
-      );
-    }
+      </>
+    );
   }
 }
+
 PhotoInfo.propTypes = {
   value: PropTypes.string,
 };
-
-export default PhotoInfo;
