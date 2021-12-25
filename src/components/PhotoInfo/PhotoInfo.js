@@ -12,17 +12,24 @@ import NotFound from 'components/NotFound';
 import scroll from 'react-scroll';
 const scrollToBottom = scroll.animateScroll.scrollToBottom;
 
+const Status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  REJECTED: 'rejected',
+  RESOLVED: 'resolved',
+};
+
 export default function PhotoInfo({ value }) {
   const [photos, setPhotos] = useState([]);
   const [page, setPage] = useState(1);
-  const [status, setStatus] = useState('idle');
+  const [status, setStatus] = useState(Status.IDLE);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (value === '') {
       return;
     }
-    setStatus('pending');
+    setStatus(Status.PENDING);
     updateState();
     requestPhotos(value, page);
     scrollToBottom();
@@ -33,7 +40,7 @@ export default function PhotoInfo({ value }) {
     if (page === 1) {
       return;
     }
-    setStatus('pending');
+    setStatus(Status.PENDING);
 
     requestPhotos(value, page);
     scrollToBottom();
@@ -48,11 +55,11 @@ export default function PhotoInfo({ value }) {
           return Promise.reject(new Error(`${searchQuery} nothing to display`));
         }
         setPhotos(prevPhotos => [...prevPhotos, ...fetchPhotos.hits]);
-        setStatus('resolved');
+        setStatus(Status.RESOLVED);
       })
       .catch(error => {
         setError(error);
-        setStatus('rejected');
+        setStatus(Status.REJECTED);
       });
   };
 
@@ -65,7 +72,7 @@ export default function PhotoInfo({ value }) {
     setPage(prevPage => prevPage + 1);
   };
 
-  if (status === 'idle') {
+  if (status === Status.IDLE) {
     return (
       <div className={styles.Container}>
         <Background />
@@ -73,14 +80,14 @@ export default function PhotoInfo({ value }) {
     );
   }
 
-  if (status === 'pending') {
+  if (status === Status.PENDING) {
     return (
       <div className={styles.Container}>
         <Loader />;
       </div>
     );
   }
-  if (status === 'rejected') {
+  if (status === Status.REJECTED) {
     return (
       <div className={styles.Container}>
         <NotFound error={error.message} />
@@ -88,7 +95,7 @@ export default function PhotoInfo({ value }) {
     );
   }
 
-  if (status === 'resolved') {
+  if (status === Status.RESOLVED) {
     return (
       <>
         <ImageGallery photos={photos} />

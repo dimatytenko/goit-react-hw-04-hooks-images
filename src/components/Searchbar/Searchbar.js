@@ -28,13 +28,12 @@ export default function Searchbar({ onSubmit }) {
     }
 
     onSubmit(inputValue);
-
-    reset();
-  };
-
-  const reset = () => {
     setInputValue('');
   };
+
+  // const reset = () => {
+  //   setInputValue('');
+  // };
 
   return (
     <header className={styles.Searchbar}>

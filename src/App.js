@@ -10,13 +10,13 @@ import Searchbar from 'components/Searchbar';
 export default function App() {
   const [searchValue, setSearchValue] = useState('');
 
-  const onSubmit = inputValue => {
-    setSearchValue(inputValue);
-  };
+  // const onSubmit = inputValue => {
+  //   setSearchValue(inputValue);
+  // };
 
   return (
     <div className={styles.App}>
-      <Searchbar onSubmit={onSubmit} />
+      <Searchbar onSubmit={setSearchValue} />
       <PhotoInfo value={searchValue} />
       <ToastContainer />
     </div>
