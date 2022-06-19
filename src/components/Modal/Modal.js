@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import styles from './Modal.module.css';
 import PropTypes from 'prop-types';
+
+import { ModalOverlay, ModalBox, ModalImg } from './Modal.styled';
 
 const modalRoot = document.querySelector('#modal-root');
 
@@ -29,11 +30,11 @@ export default function Modal({ infoModal, onClose }) {
   const { srcModal, altModal } = infoModal;
 
   return createPortal(
-    <div className={styles.Overlay} onClick={handleBackdropClick}>
-      <div div className={styles.Modal}>
-        <img src={srcModal} alt={altModal} />
-      </div>
-    </div>,
+    <ModalOverlay onClick={handleBackdropClick}>
+      <ModalBox>
+        <ModalImg src={srcModal} alt={altModal} />
+      </ModalBox>
+    </ModalOverlay>,
     modalRoot,
   );
 }

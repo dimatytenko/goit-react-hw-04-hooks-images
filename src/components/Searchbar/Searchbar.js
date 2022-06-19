@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
-import styles from './Searchbar.module.css';
 import PropTypes from 'prop-types';
-
 import { toast } from 'react-toastify';
+
+import loop from '../../icons/loop.svg';
+import {
+  SearchbarHeader,
+  SearchbarForm,
+  SearchbarLabel,
+  SearchbarButton,
+  SearchbarInput,
+} from './Searchbar.styled';
 
 export default function Searchbar({ onSubmit }) {
   const [inputValue, setInputValue] = useState('');
@@ -31,27 +38,20 @@ export default function Searchbar({ onSubmit }) {
     setInputValue('');
   };
 
-  // const reset = () => {
-  //   setInputValue('');
-  // };
-
   return (
-    <header className={styles.Searchbar}>
-      <form className={styles.SearchForm} onSubmit={handleSubmit}>
-        <button type="submit" className={styles.SearchForm__button}>
-          <span className={styles.SearchForm__button__label}>Search</span>
-        </button>
+    <SearchbarHeader>
+      <SearchbarForm onSubmit={handleSubmit}>
+        <SearchbarButton icon={loop} type="submit">
+          <SearchbarLabel>Search</SearchbarLabel>
+        </SearchbarButton>
 
-        <input
-          className={styles.SearchForm__input}
+        <SearchbarInput
           type="text"
-          // autocomplete="off"
-          // autofocus
           placeholder="Search images and photos"
           onChange={handleInputChange}
         />
-      </form>
-    </header>
+      </SearchbarForm>
+    </SearchbarHeader>
   );
 }
 

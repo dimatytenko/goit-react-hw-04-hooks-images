@@ -1,10 +1,12 @@
 import React from 'react';
-import styles from './Background.module.css';
+import search from '../../image/search.jpg';
+import { BackgroundBox, BackgroundTitle } from './Background.styled';
 
 export default function Background() {
   return (
-    <div className={styles.Background}>
-      <h1>Your request will be displayed there</h1>;
-    </div>
+    <>
+      <BackgroundTitle>Your request will be displayed here</BackgroundTitle>
+      <BackgroundBox image={search}></BackgroundBox>
+    </>
   );
 }

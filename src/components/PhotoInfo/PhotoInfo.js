@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import styles from './PhotoInfo.module.css';
 import PropTypes from 'prop-types';
 
+import { Status } from '../../constants';
+import { PhotoInfoBox } from './Photoinfo.styled';
+import { LoaderBox } from '../Loader/Loader.styled';
 import photosAPI from 'API/photos-api';
 import ImageGallery from 'components/ImageGallery';
 import Button from 'components/Button';
@@ -11,13 +13,6 @@ import NotFound from 'components/NotFound';
 
 import scroll from 'react-scroll';
 const scrollToBottom = scroll.animateScroll.scrollToBottom;
-
-const Status = {
-  IDLE: 'idle',
-  PENDING: 'pending',
-  REJECTED: 'rejected',
-  RESOLVED: 'resolved',
-};
 
 export default function PhotoInfo({ value }) {
   const [photos, setPhotos] = useState([]);
@@ -32,7 +27,7 @@ export default function PhotoInfo({ value }) {
     setStatus(Status.PENDING);
     updateState();
     requestPhotos(value, page);
-    scrollToBottom();
+    // scrollToBottom();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
@@ -74,34 +69,30 @@ export default function PhotoInfo({ value }) {
 
   if (status === Status.IDLE) {
     return (
-      <div className={styles.Container}>
+      <PhotoInfoBox>
         <Background />
-      </div>
+      </PhotoInfoBox>
     );
   }
 
   if (status === Status.PENDING) {
     return (
-      <div className={styles.Container}>
+      <LoaderBox>
         <Loader />;
-      </div>
+      </LoaderBox>
     );
   }
   if (status === Status.REJECTED) {
-    return (
-      <div className={styles.Container}>
-        <NotFound error={error.message} />
-      </div>
-    );
+    return <PhotoInfoBox>{<NotFound error={error.message} />}</PhotoInfoBox>;
   }
 
   if (status === Status.RESOLVED) {
     return (
       <>
         <ImageGallery photos={photos} />
-        <div className={styles.Container}>
+        <PhotoInfoBox>
           {photos.length > 0 && <Button onClick={handleButtonClick} />}
-        </div>
+        </PhotoInfoBox>
       </>
     );
   }

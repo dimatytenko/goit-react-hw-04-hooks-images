@@ -1,10 +1,15 @@
 import React from 'react';
-import styles from './NotFound.module.css';
+
+import notFound from '../../image/notFound.jpg';
+import {
+  BackgroundBox,
+  BackgroundTitle,
+} from '../Background/Background.styled';
 
 export default function NotFound({ error }) {
   return (
-    <div className={styles.NotFound}>
-      <h1>{error}</h1>;
-    </div>
+    <BackgroundBox image={notFound}>
+      <BackgroundTitle>{error}</BackgroundTitle>
+    </BackgroundBox>
   );
 }

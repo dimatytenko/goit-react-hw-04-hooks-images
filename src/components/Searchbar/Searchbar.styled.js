@@ -1,4 +1,6 @@
-.Searchbar {
+import styled from 'styled-components';
+
+export const SearchbarHeader = styled.header`
   top: 0;
   left: 0;
   position: sticky;
@@ -12,12 +14,12 @@
   padding-top: 12px;
   padding-bottom: 12px;
   color: #fff;
-  background-color: #3f51b5;
+  background-color: ${props => props.theme.backgrounds.primary};
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-}
+`;
 
-.SearchForm {
+export const SearchbarForm = styled.form`
   display: flex;
   align-items: center;
   width: 100%;
@@ -25,28 +27,9 @@
   background-color: #fff;
   border-radius: 3px;
   overflow: hidden;
-}
+`;
 
-.SearchForm__button {
-  display: inline-block;
-  width: 48px;
-  height: 48px;
-  border: 0;
-  background-image: url('../../icons/loop.svg');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.6;
-  transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  outline: none;
-}
-
-.SearchForm__button:hover {
-  opacity: 1;
-}
-
-.SearchForm__button__label {
+export const SearchbarLabel = styled.label`
   position: absolute;
   width: 1px;
   height: 1px;
@@ -56,9 +39,28 @@
   white-space: nowrap;
   clip-path: inset(50%);
   border: 0;
-}
+`;
 
-.SearchForm__input {
+export const SearchbarButton = styled.button`
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background-image: url(${props => props.icon});
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.6;
+  transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  outline: none;
+
+  :hover {
+    opacity: 1;
+  }
+`;
+
+export const SearchbarInput = styled.input`
   display: inline-block;
   width: 100%;
   font: inherit;
@@ -66,10 +68,10 @@
   border: none;
   outline: none;
   padding-left: 4px;
-  padding-right: 4px;
-}
-
-.SearchForm__input::placeholder {
+  padding-right: 4px
+  
+  ::placeholder {
   font: inherit;
-  font-size: 18px;
-}
+  font-size: 14px;
+  }
+`;

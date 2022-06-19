@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import styles from './ImageGallery.module.css';
+import { Galary } from './ImageGalery.styled';
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import Modal from 'components/Modal';
 
@@ -19,8 +19,8 @@ export default function ImageGallery({ photos }) {
     toggleModal();
   };
   return (
-    <div>
-      <ul className={styles.ImageGallery}>
+    <>
+      <Galary>
         {photos.map(({ id, webformatURL, tags, largeImageURL }) => (
           <ImageGalleryItem
             key={id}
@@ -31,11 +31,11 @@ export default function ImageGallery({ photos }) {
             }}
           />
         ))}
-      </ul>
+      </Galary>
       {showModal && (
         <Modal infoModal={{ srcModal, altModal }} onClose={toggleModal} />
       )}
-    </div>
+    </>
   );
 }
 

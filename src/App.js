@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
-import styles from './App.module.css';
-
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { AppBox } from './App.styled';
 import PhotoInfo from 'components/PhotoInfo';
 import Searchbar from 'components/Searchbar';
 
 export default function App() {
   const [searchValue, setSearchValue] = useState('');
 
-  // const onSubmit = inputValue => {
-  //   setSearchValue(inputValue);
-  // };
-
   return (
-    <div className={styles.App}>
+    <AppBox>
       <Searchbar onSubmit={setSearchValue} />
       <PhotoInfo value={searchValue} />
       <ToastContainer />
-    </div>
+    </AppBox>
   );
 }
